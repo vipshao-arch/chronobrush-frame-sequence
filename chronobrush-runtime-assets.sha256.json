@@ -1,9 +1,11 @@
 {
   "archive": "chronobrush-runtime-assets.zip",
-  "contents": "assets/{base.webp,reference.webp,motion-mask.webp,timeline.json}",
+  "contents": "assets/{base.webp,keyframes.webp,flow.webp,motion-mask.webp,timeline.json}",
   "sourceFrames": 145,
   "fps": 24.0,
   "commands": 96,
+  "keyframes": 19,
+  "fullResolution": true,
   "files": [
     {
       "path": "assets/base.webp",
@@ -11,9 +13,14 @@
       "sha256": "82d28e81e59082061443f8694a01f793f0c2a45422a487e14126ea3c2e0d59a4"
     },
     {
-      "path": "assets/reference.webp",
-      "bytes": 8442304,
-      "sha256": "e46bda8ce8dcaa447e9a2ab65b043642f4d69dfc3e8544850fddc2425647407a"
+      "path": "assets/keyframes.webp",
+      "bytes": 5132404,
+      "sha256": "722da4a433fc7c8d5158d3856194e00fcd74f10398d5c37849ac25e9d81b979e"
+    },
+    {
+      "path": "assets/flow.webp",
+      "bytes": 1022598,
+      "sha256": "645ba1603e16f697cf76f2bf04bca2d1f2e58399e404129324eeaf8a00edd841"
     },
     {
       "path": "assets/motion-mask.webp",
@@ -22,10 +29,10 @@
     },
     {
       "path": "assets/timeline.json",
-      "bytes": 2092481,
-      "sha256": "4f2220a2149a7f39e6cf02f245148e8aae84e95b26ebb722f9238b457b97b3ef"
+      "bytes": 2093149,
+      "sha256": "fb79e5933ebdf17c00a7771e525e1c09ae5ad2325e868bf771e5b2d6ea87a3c6"
     }
   ],
-  "archiveBytes": 9824133,
-  "archiveSha256": "5f2d63ca20bc85e5eea57c5e634a628916ef8707f9dfb1021d13f21f90096d66"
+  "archiveBytes": 7536697,
+  "archiveSha256": "dd41a6ca047ace5108bf47624d9c7c87884ec3fbbee4caea95a3894967c5f1b6"
 }

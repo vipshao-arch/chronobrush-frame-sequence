@@ -5,9 +5,8 @@ import {
   findStateInterval,
   frameAtTime,
   interpolateState,
-  keyframeForFrame,
   meanAbsError,
-  sheetCell,
+  sparseFrameInfo,
   transformPoints,
 } from "../src/timeline.js";
 
@@ -32,16 +31,25 @@ test("state interpolation preserves position and deformation over time", () => {
   assert.ok(Math.abs(middle.alpha - 0.3) < 1e-12);
 });
 
-test("reference frames map to the correct sprite sheet cell", () => {
+test("sparse reference frames map to the nearest keyframe and flow cell", () => {
   const meta = {
-    keyframes: [0, 3, 6, 9, 12],
-    sheet: { cols: 2, cellWidth: 490, cellHeight: 210 },
+    referenceFrames: {
+      keyframes: [0, 3, 6, 9, 12],
+      anchorKeyframe: [0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4],
+      keyframeCols: 2,
+      flowCols: 4,
+    },
   };
-  assert.equal(keyframeForFrame(meta, 0), 0);
-  assert.equal(keyframeForFrame(meta, 4), 1);
-  const cell = sheetCell(meta, 10);
-  assert.deepEqual([cell.index, cell.col, cell.row], [3, 1, 1]);
-  assert.deepEqual([cell.sx, cell.sy], [490, 210]);
+  const first = sparseFrameInfo(meta, 0);
+  assert.deepEqual([first.anchor, first.anchorFrame, first.anchorDistance],
+                   [0, 0, 0]);
+  assert.deepEqual(first.keyCell, [0, 0]);
+  assert.deepEqual(first.flowCell, [0, 0]);
+  const middle = sparseFrameInfo(meta, 5);
+  assert.deepEqual([middle.anchor, middle.anchorFrame, middle.anchorDistance],
+                   [2, 6, 1]);
+  assert.deepEqual(middle.keyCell, [0, 1]);
+  assert.deepEqual(middle.flowCell, [1, 1]);
 });
 
 test("brush points undergo affine shape and displacement", () => {

@@ -15,7 +15,8 @@ MANIFEST = ROOT / "chronobrush-runtime-assets.sha256.json"
 
 FILES = (
     "base.webp",
-    "reference.webp",
+    "keyframes.webp",
+    "flow.webp",
     "motion-mask.webp",
     "timeline.json",
 )
@@ -31,9 +32,11 @@ def digest(path: Path) -> str:
 
 def main() -> None:
     timeline = json.loads((SOURCE / "timeline.json").read_text(encoding="utf-8"))
+    reference_frames = timeline["referenceFrames"]
     declared = {
         timeline["base"]["file"],
-        timeline["sheet"]["file"],
+        reference_frames["keyframeFile"],
+        reference_frames["flowFile"],
         timeline["mask"]["file"],
         "timeline.json",
     }
@@ -49,6 +52,8 @@ def main() -> None:
         "sourceFrames": timeline["frameCount"],
         "fps": timeline["fps"],
         "commands": len(timeline["commands"]),
+        "keyframes": len(reference_frames["keyframes"]),
+        "fullResolution": reference_frames["fullResolution"],
         "files": [],
     }
     with zipfile.ZipFile(OUTPUT, "w", compression=zipfile.ZIP_DEFLATED,

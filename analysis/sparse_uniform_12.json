@@ -1,0 +1,305 @@
+{
+  "mode": "uniform",
+  "step": 12,
+  "quality": 98,
+  "frames": 145,
+  "keyframeCount": 13,
+  "keyframes": [
+    0,
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96,
+    108,
+    120,
+    132,
+    144
+  ],
+  "maxAnchorDistance": 5,
+  "keyAtlasBytes": 3507174,
+  "flowAtlasBytes": 382854,
+  "flowSaturatedChannelRatio": 0.0,
+  "lowresMeanMae": 3.1191,
+  "sparseMeanMae": 3.3524,
+  "lowresMeanPsnr": 32.708,
+  "sparseMeanPsnr": 31.927,
+  "lowresMeanSharpness": 5.5793,
+  "sparseMeanSharpness": 7.309,
+  "referenceMeanSharpness": 7.6851,
+  "samples": [
+    {
+      "frame": 0,
+      "anchorFrame": 0,
+      "anchorDistance": 0,
+      "lowres": {
+        "mae": 2.7386,
+        "p95": 12.0,
+        "psnr": 32.546,
+        "sharpness": 5.6128
+      },
+      "sparse": {
+        "mae": 0.7447,
+        "p95": 3.0,
+        "psnr": 44.872,
+        "sharpness": 7.7094
+      },
+      "referenceSharpness": 7.6481
+    },
+    {
+      "frame": 10,
+      "anchorFrame": 12,
+      "anchorDistance": 2,
+      "lowres": {
+        "mae": 3.0455,
+        "p95": 12.0,
+        "psnr": 32.771,
+        "sharpness": 5.5868
+      },
+      "sparse": {
+        "mae": 2.9911,
+        "p95": 11.0,
+        "psnr": 31.06,
+        "sharpness": 7.0855
+      },
+      "referenceSharpness": 7.5673
+    },
+    {
+      "frame": 21,
+      "anchorFrame": 24,
+      "anchorDistance": 3,
+      "lowres": {
+        "mae": 3.0959,
+        "p95": 12.0,
+        "psnr": 32.722,
+        "sharpness": 5.5515
+      },
+      "sparse": {
+        "mae": 3.0709,
+        "p95": 11.0,
+        "psnr": 31.163,
+        "sharpness": 7.0629
+      },
+      "referenceSharpness": 7.582
+    },
+    {
+      "frame": 31,
+      "anchorFrame": 36,
+      "anchorDistance": 5,
+      "lowres": {
+        "mae": 3.1245,
+        "p95": 12.0,
+        "psnr": 32.797,
+        "sharpness": 5.5842
+      },
+      "sparse": {
+        "mae": 5.211,
+        "p95": 21.0,
+        "psnr": 25.826,
+        "sharpness": 7.1854
+      },
+      "referenceSharpness": 7.621
+    },
+    {
+      "frame": 41,
+      "anchorFrame": 36,
+      "anchorDistance": 5,
+      "lowres": {
+        "mae": 3.1013,
+        "p95": 12.0,
+        "psnr": 32.887,
+        "sharpness": 5.5786
+      },
+      "sparse": {
+        "mae": 4.7285,
+        "p95": 19.0,
+        "psnr": 26.939,
+        "sharpness": 7.1961
+      },
+      "referenceSharpness": 7.6093
+    },
+    {
+      "frame": 51,
+      "anchorFrame": 48,
+      "anchorDistance": 3,
+      "lowres": {
+        "mae": 3.1288,
+        "p95": 12.0,
+        "psnr": 32.825,
+        "sharpness": 5.5596
+      },
+      "sparse": {
+        "mae": 3.4338,
+        "p95": 12.0,
+        "psnr": 29.884,
+        "sharpness": 7.1616
+      },
+      "referenceSharpness": 7.6458
+    },
+    {
+      "frame": 62,
+      "anchorFrame": 60,
+      "anchorDistance": 2,
+      "lowres": {
+        "mae": 3.1855,
+        "p95": 12.0,
+        "psnr": 32.543,
+        "sharpness": 5.5928
+      },
+      "sparse": {
+        "mae": 3.7592,
+        "p95": 14.0,
+        "psnr": 29.11,
+        "sharpness": 7.3218
+      },
+      "referenceSharpness": 7.7661
+    },
+    {
+      "frame": 72,
+      "anchorFrame": 72,
+      "anchorDistance": 0,
+      "lowres": {
+        "mae": 3.2398,
+        "p95": 12.0,
+        "psnr": 32.401,
+        "sharpness": 5.5859
+      },
+      "sparse": {
+        "mae": 1.2943,
+        "p95": 3.6433,
+        "psnr": 43.026,
+        "sharpness": 7.911
+      },
+      "referenceSharpness": 7.888
+    },
+    {
+      "frame": 82,
+      "anchorFrame": 84,
+      "anchorDistance": 2,
+      "lowres": {
+        "mae": 3.195,
+        "p95": 12.0,
+        "psnr": 32.605,
+        "sharpness": 5.5986
+      },
+      "sparse": {
+        "mae": 3.1898,
+        "p95": 11.0,
+        "psnr": 30.596,
+        "sharpness": 7.222
+      },
+      "referenceSharpness": 7.7561
+    },
+    {
+      "frame": 93,
+      "anchorFrame": 96,
+      "anchorDistance": 3,
+      "lowres": {
+        "mae": 3.128,
+        "p95": 12.0,
+        "psnr": 32.876,
+        "sharpness": 5.5688
+      },
+      "sparse": {
+        "mae": 3.264,
+        "p95": 12.0,
+        "psnr": 30.686,
+        "sharpness": 7.1468
+      },
+      "referenceSharpness": 7.6412
+    },
+    {
+      "frame": 103,
+      "anchorFrame": 108,
+      "anchorDistance": 5,
+      "lowres": {
+        "mae": 3.1371,
+        "p95": 12.0,
+        "psnr": 32.856,
+        "sharpness": 5.5693
+      },
+      "sparse": {
+        "mae": 5.2115,
+        "p95": 21.0,
+        "psnr": 26.029,
+        "sharpness": 7.1672
+      },
+      "referenceSharpness": 7.6526
+    },
+    {
+      "frame": 113,
+      "anchorFrame": 108,
+      "anchorDistance": 5,
+      "lowres": {
+        "mae": 3.1383,
+        "p95": 12.0,
+        "psnr": 32.79,
+        "sharpness": 5.5669
+      },
+      "sparse": {
+        "mae": 5.3901,
+        "p95": 23.0,
+        "psnr": 25.855,
+        "sharpness": 7.2303
+      },
+      "referenceSharpness": 7.6201
+    },
+    {
+      "frame": 123,
+      "anchorFrame": 120,
+      "anchorDistance": 3,
+      "lowres": {
+        "mae": 3.1674,
+        "p95": 12.0,
+        "psnr": 32.691,
+        "sharpness": 5.5584
+      },
+      "sparse": {
+        "mae": 3.5378,
+        "p95": 13.0,
+        "psnr": 29.634,
+        "sharpness": 7.131
+      },
+      "referenceSharpness": 7.6751
+    },
+    {
+      "frame": 134,
+      "anchorFrame": 132,
+      "anchorDistance": 2,
+      "lowres": {
+        "mae": 3.1968,
+        "p95": 12.0,
+        "psnr": 32.63,
+        "sharpness": 5.5973
+      },
+      "sparse": {
+        "mae": 3.2028,
+        "p95": 11.0,
+        "psnr": 30.937,
+        "sharpness": 7.2367
+      },
+      "referenceSharpness": 7.7601
+    },
+    {
+      "frame": 144,
+      "anchorFrame": 144,
+      "anchorDistance": 0,
+      "lowres": {
+        "mae": 3.1638,
+        "p95": 12.0,
+        "psnr": 32.676,
+        "sharpness": 5.5778
+      },
+      "sparse": {
+        "mae": 1.2569,
+        "p95": 3.3278,
+        "psnr": 43.284,
+        "sharpness": 7.8668
+      },
+      "referenceSharpness": 7.8432
+    }
+  ]
+}

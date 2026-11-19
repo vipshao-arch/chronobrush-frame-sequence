@@ -1,6 +1,6 @@
 import { renderCommands } from "./draw.js";
 import { assetUrl } from "./assets.js";
-import { frameAtTime, meanAbsError, sheetCell } from "./timeline.js";
+import { frameAtTime, meanAbsError, sparseFrameInfo } from "./timeline.js";
 import { loadRenderer } from "./webgl.js";
 
 const $ = (id) => document.getElementById(id);
@@ -19,7 +19,6 @@ const els = {
 const state = {
   meta: null,
   renderer: null,
-  sheetImage: null,
   playing: true,
   time: 0,
   lastFrame: -1,
@@ -41,7 +40,8 @@ function renderCommandList(meta) {
     acc[c.type] = (acc[c.type] || 0) + 1;
     return acc;
   }, {});
-  els.cmdCount.textContent = `${meta.commands.length} 条 · ${meta.keyframes.length} 个采样时刻`;
+  els.cmdCount.textContent =
+    `${meta.commands.length} 条 · ${meta.keyframes.length} 个状态时刻`;
   els.typeRow.innerHTML = ["ellipse", "line", "bezier", "brush"]
     .map((type) => `<span>${type}<b>${counts[type] || 0}</b></span>`).join("");
   els.commandList.innerHTML = meta.commands.slice(0, 12).map((c) => `
@@ -104,24 +104,23 @@ function smallContext(width, height) {
   return ctx;
 }
 
-function measureQuality(meta, time, cell) {
+function measureQuality(time) {
   if (Math.abs(time - state.lastMeterAt) < 0.12 && state.lastFrame >= 0) return;
   state.lastMeterAt = time;
   const w = 147;
   const h = 63;
-  const refCtx = smallContext(w, h);
-  refCtx.drawImage(state.sheetImage, cell.sx, cell.sy,
-    cell.cellWidth, cell.cellHeight, 0, 0, w, h);
-  const reference = refCtx.getImageData(0, 0, w, h).data;
+  const reference = smallContext(w, h);
+  reference.drawImage(els.reference, 0, 0, w, h);
+  const referenceData = reference.getImageData(0, 0, w, h).data;
 
-  // Read the WebGL core, then add the diagnostic brush layer on the same canvas.
   const composite = smallContext(w, h);
   composite.drawImage(els.gl, 0, 0, w, h);
   const coreData = composite.getImageData(0, 0, w, h).data;
   if (els.vectorToggle.checked) composite.drawImage(els.vector, 0, 0, w, h);
-  const overlay = composite.getImageData(0, 0, w, h).data;
-  els.mae.textContent = `${rounded(meanAbsError(coreData, reference), 2)} / ${
-    rounded(meanAbsError(overlay, reference), 2)}`;
+  const overlayData = composite.getImageData(0, 0, w, h).data;
+  els.mae.textContent =
+    `${rounded(meanAbsError(coreData, referenceData), 2)} / ${
+      rounded(meanAbsError(overlayData, referenceData), 2)}`;
 }
 
 function render(time, forceMeter = false) {
@@ -130,13 +129,16 @@ function render(time, forceMeter = false) {
   const clamped = Math.max(0, Math.min(meta.duration - 1 / meta.fps, time));
   state.time = clamped;
   const frame = frameAtTime(clamped, meta.fps, meta.frameCount);
-  const cell = state.renderer.render(frame);
+
+  // Produce the full warped picture for comparison, then restore the
+  // locked-base composite before the browser paints.
+  const info = state.renderer.render(frame, true);
+  const refCtx = els.reference.getContext("2d");
+  refCtx.clearRect(0, 0, meta.width, meta.height);
+  refCtx.drawImage(els.gl, 0, 0, meta.width, meta.height);
+  state.renderer.render(frame, false);
   renderCommands(els.vector.getContext("2d"), meta.commands,
                  clamped, meta.width, meta.height);
-
-  const refCtx = els.reference.getContext("2d");
-  refCtx.drawImage(state.sheetImage, cell.sx, cell.sy,
-    cell.cellWidth, cell.cellHeight, 0, 0, meta.width, meta.height);
 
   if (frame !== state.lastFrame || forceMeter) {
     state.lastFrame = frame;
@@ -144,19 +146,22 @@ function render(time, forceMeter = false) {
     els.frameValue.textContent = `${frame} / ${meta.frameCount - 1}`;
     els.time.textContent = `${rounded(clamped, 3)} / ${rounded(meta.duration, 3)} s`;
     els.seek.value = String(clamped);
-    const index = cell.index;
-    els.displacement.textContent = `${rounded(meta.motionSeries.displacement[index] || 0, 2)} px`;
-    els.deformation.textContent = rounded(meta.motionSeries.deformation[index] || 0, 3);
-    els.sync.textContent = `${Math.abs(frame - meta.keyframes[cell.index])} f / 0.0 ms`;
+    const transition = Math.min(frame, meta.motionSeries.displacement.length - 1);
+    els.displacement.textContent =
+      `${rounded(meta.motionSeries.displacement[transition] || 0, 2)} px`;
+    els.deformation.textContent =
+      rounded(meta.motionSeries.deformation[transition] || 0, 3);
+    els.sync.textContent = `${info.anchorDistance} f / 0.0 ms`;
     drawChart(meta, clamped);
     for (const command of meta.commands.slice(0, 12)) {
-      const m = command.motion[Math.max(0, Math.min(index, command.motion.length - 1))];
+      const m = command.motion[
+        Math.max(0, Math.min(transition, command.motion.length - 1))];
       const node = $(`motion-${command.id}`);
       if (node && m) node.textContent = `${rounded(Math.hypot(m[0], m[1]), 2)}px`;
     }
   }
   if (forceMeter) state.lastMeterAt = -1;
-  measureQuality(meta, clamped, cell);
+  measureQuality(clamped);
 }
 
 function loop(now) {
@@ -184,11 +189,10 @@ async function init() {
     renderCommandList(meta);
     drawChart(meta, 0);
 
-    state.sheetImage = new Image();
-    state.sheetImage.src = assetUrl(meta.sheet.file);
-    await state.sheetImage.decode();
     state.renderer = await loadRenderer(els.gl, meta);
-    els.status.textContent = `${meta.frameCount} 帧 · ${meta.commands.length} 笔触 · WebGL LOCK=ON`;
+    const rf = meta.referenceFrames;
+    els.status.textContent =
+      `${meta.frameCount} 帧 · ${meta.commands.length} 笔触 · ${rf.keyframes.length} 关键帧 · WebGL LOCK=ON`;
     els.status.classList.remove("error");
 
     window.__chronobrush = {
@@ -202,9 +206,15 @@ async function init() {
         return window.__chronobrush.diagnostic;
       },
       get diagnostic() {
+        const info = sparseFrameInfo(meta, Math.max(0, state.lastFrame));
         return {
           frame: state.lastFrame,
-          keyframe: sheetCell(meta, state.lastFrame).index,
+          anchor: info.anchor,
+          anchorFrame: info.anchorFrame,
+          anchorDistance: info.anchorDistance,
+          keyframeCount: rf.keyframes.length,
+          flowFrame: state.lastFrame,
+          fullResolution: rf.fullResolution,
           baseTextureUpdates: state.renderer.baseTextureUpdates,
           frameSheetTextureUpdates: 0,
           time: state.time,
@@ -256,7 +266,8 @@ els.vectorToggle.addEventListener("change", () => {
 els.splitToggle.addEventListener("change", () => {
   els.stage.classList.toggle("split", els.splitToggle.checked);
   els.stageCaption.textContent = els.splitToggle.checked
-    ? "左：重建 · 右：参考" : "重建画面";
+    ? "左：锁定基底合成 · 右：全分辨率关键帧 + 光流"
+    : "重建画面";
 });
 
 init();

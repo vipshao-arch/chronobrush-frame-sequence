@@ -6,3 +6,4 @@ analysis/frames/
 analysis/sheet/
 __pycache__/
 *.pyc
+analysis/legacy-reference.webp

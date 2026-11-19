@@ -1,9 +1,9 @@
-"""Extract a locked WebGL base and per-frame, reference-driven drawing commands.
+"""Extract a locked WebGL base and reference-driven drawing commands.
 
 Input: the reference MP4 (used only during pre-analysis). Output: a static
-WebP, a WebP sprite sheet containing every reference frame, a WebP motion
-mask, and a JSON timeline of animated primitives. The browser needs only
-these generated data files; the source MP4 is never shipped at runtime.
+WebP, a WebP motion mask and a JSON timeline of animated primitives. The
+sparse full-resolution keyframes and flow maps are added by
+tools/build_sparse_assets.py. The source MP4 is never shipped at runtime.
 """
 
 from __future__ import annotations
@@ -73,19 +73,6 @@ def temporal_keyframes(frames: np.ndarray, count: int):
     if count >= n:
         return np.arange(n)
     return np.unique(np.linspace(0, n - 1, count).round().astype(int))
-
-
-def make_sheet(frames: np.ndarray, indices: np.ndarray, cols: int,
-               cell_width: int, cell_height: int) -> tuple[np.ndarray, int]:
-    rows = math.ceil(len(indices) / cols)
-    sheet = np.zeros((rows * cell_height, cols * cell_width, 3), np.uint8)
-    for k, idx in enumerate(indices):
-        cell = cv2.resize(frames[idx], (cell_width, cell_height),
-                          interpolation=cv2.INTER_AREA)
-        y, x = divmod(k, cols)
-        sheet[y * cell_height:(y + 1) * cell_height,
-              x * cell_width:(x + 1) * cell_width] = cell
-    return sheet, rows
 
 
 def sample_cubic(points: np.ndarray, t: float) -> tuple[float, float]:
@@ -259,19 +246,16 @@ def main():
     key_count = args.keys or len(frames)
     keys = temporal_keyframes(frames, min(key_count, len(frames)))
     flows = flow_sequence(frames, keys)
-    cols = 7
-    cell_width, cell_height = 735, 315
-    sheet, rows = make_sheet(frames, keys, cols, cell_width, cell_height)
     commands = extract_commands(frames, keys, heat, args.threshold,
                                 args.primitives, flows, args.fps)
 
     save_webp(base, args.out / "base.webp", lossless=True, method=4)
-    save_webp(sheet, args.out / "reference.webp", 91)
     mask = np.dstack([np.clip(heat * 255, 0, 255).astype(np.uint8)] * 3)
     save_webp(mask, args.out / "motion-mask.webp", lossless=True)
-    stale_video = args.out / "reference.mp4"
-    if stale_video.exists():
-        stale_video.unlink()
+    for stale_name in ("reference.mp4", "reference.webp"):
+        stale_path = args.out / stale_name
+        if stale_path.exists():
+            stale_path.unlink()
 
     meta = {
         "version": 1,
@@ -284,13 +268,10 @@ def main():
         "keyframes": keys.tolist(),
         "keyTimes": [round(float(i) / args.fps, 6) for i in keys],
         "referenceFrames": {
-            "file": "reference.webp",
             "sync": "timeline.frameAtTime",
-            "frames": len(keys),
-            "source": "pre-analyzed WebP frames",
+            "frames": len(frames),
+            "source": "pre-analyzed sparse WebP keyframes and optical flow",
         },
-        "sheet": {"file": "reference.webp", "cols": cols, "rows": rows,
-                  "cellWidth": cell_width, "cellHeight": cell_height},
         "base": {"file": "base.webp", "locked": True, "source": "frame 0",
                  "staticPixelRatio": round(float((static > 0.5).mean()), 5)},
         "mask": {"file": "motion-mask.webp"},
@@ -311,10 +292,8 @@ def main():
     print(json.dumps({
         "frames": len(frames), "keys": len(keys), "commands": len(commands),
         "staticPixelRatio": meta["base"]["staticPixelRatio"],
-        "sheet": [sheet.shape[1], sheet.shape[0]],
         "assetBytes": sum((args.out / p).stat().st_size for p in
-                          ["base.webp", "reference.webp", "motion-mask.webp",
-                           "timeline.json"]),
+                          ["base.webp", "motion-mask.webp", "timeline.json"]),
     }, indent=2))
 
 

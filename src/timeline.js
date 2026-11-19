@@ -52,32 +52,16 @@ export function transformPoints(points, state) {
   });
 }
 
-export function keyframeForFrame(meta, frame) {
-  const keys = meta.keyframes;
-  let lo = 0;
-  let hi = keys.length - 1;
-  while (lo < hi) {
-    const mid = (lo + hi) >> 1;
-    if (keys[mid] < frame) lo = mid + 1;
-    else hi = mid;
-  }
-  if (lo > 0 && Math.abs(keys[lo - 1] - frame) < Math.abs(keys[lo] - frame)) {
-    return lo - 1;
-  }
-  return lo;
-}
-
-export function sheetCell(meta, frame) {
-  const index = keyframeForFrame(meta, frame);
-  const { cols, cellWidth, cellHeight } = meta.sheet;
+export function sparseFrameInfo(meta, frame) {
+  const rf = meta.referenceFrames;
+  const anchor = rf.anchorKeyframe[frame];
+  const anchorFrame = rf.keyframes[anchor];
   return {
-    index,
-    col: index % cols,
-    row: Math.floor(index / cols),
-    sx: (index % cols) * cellWidth,
-    sy: Math.floor(index / cols) * cellHeight,
-    cellWidth,
-    cellHeight,
+    anchor,
+    anchorFrame,
+    anchorDistance: Math.abs(frame - anchorFrame),
+    keyCell: [anchor % rf.keyframeCols, Math.floor(anchor / rf.keyframeCols)],
+    flowCell: [frame % rf.flowCols, Math.floor(frame / rf.flowCols)],
   };
 }
 
