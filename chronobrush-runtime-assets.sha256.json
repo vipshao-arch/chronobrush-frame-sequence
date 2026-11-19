@@ -5,6 +5,8 @@
   "fps": 24.0,
   "commands": 96,
   "keyframes": 19,
+  "flowCells": 271,
+  "blendMode": "linear",
   "fullResolution": true,
   "files": [
     {
@@ -14,13 +16,13 @@
     },
     {
       "path": "assets/keyframes.webp",
-      "bytes": 5132404,
-      "sha256": "722da4a433fc7c8d5158d3856194e00fcd74f10398d5c37849ac25e9d81b979e"
+      "bytes": 3852068,
+      "sha256": "a9717c32dca0c4e74d3a9ddfafce2a6b202cc7d8df74f0e135873f9b6fe8eaf5"
     },
     {
       "path": "assets/flow.webp",
-      "bytes": 1022598,
-      "sha256": "645ba1603e16f697cf76f2bf04bca2d1f2e58399e404129324eeaf8a00edd841"
+      "bytes": 359558,
+      "sha256": "656675a2382c972ddf33e7a9428ee7f9101da448a748e1ad7ce7059871154296"
     },
     {
       "path": "assets/motion-mask.webp",
@@ -29,10 +31,10 @@
     },
     {
       "path": "assets/timeline.json",
-      "bytes": 2093149,
-      "sha256": "fb79e5933ebdf17c00a7771e525e1c09ae5ad2325e868bf771e5b2d6ea87a3c6"
+      "bytes": 2094796,
+      "sha256": "108976e4b79eee9f64bb14e08286d122ba0f80f692b7055ebe6b346b8a7bc067"
     }
   ],
-  "archiveBytes": 7536697,
-  "archiveSha256": "dd41a6ca047ace5108bf47624d9c7c87884ec3fbbee4caea95a3894967c5f1b6"
+  "archiveBytes": 5592824,
+  "archiveSha256": "d6f5b1f4936d281e96c21e7919d7cf91472e8604952ae3f9abda97674b694ec9"
 }

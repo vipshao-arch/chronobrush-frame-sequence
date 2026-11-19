@@ -1,0 +1,906 @@
+[
+  {
+    "candidate": {
+      "name": "step8-q98-flow368-linear-lossy94",
+      "step": 8,
+      "quality": 98,
+      "flowCell": [
+        368,
+        158
+      ],
+      "flowScale": 0.5,
+      "smoothFlow": false,
+      "blendMode": "linear",
+      "flowLossy": true,
+      "flowQuality": 94
+    },
+    "keyframeCount": 19,
+    "keyAtlasBytes": 5132404,
+    "flowAtlasBytes": 456394,
+    "flowCells": 271,
+    "timelineGzipBytes": 355829,
+    "packageBytes": 6970427,
+    "flowSaturatedChannelRatio": 2e-06,
+    "flowAtlas": [
+      4784,
+      3318
+    ],
+    "meanMae": 2.4067,
+    "meanPsnr": 34.864,
+    "meanSharpness": 6.9518,
+    "temporal": {
+      "meanDeltaMae": 1.1618,
+      "meanOutputDelta": 1.6217,
+      "meanReferenceDelta": 1.597,
+      "switchMeanDelta": 1.5322,
+      "switchSpikeRatio": 0.9599,
+      "maxDelta": 2.8811,
+      "switchFrames": [
+        5,
+        13,
+        21,
+        29,
+        37,
+        45,
+        53,
+        61,
+        69,
+        77,
+        85,
+        93,
+        101,
+        109,
+        117,
+        125,
+        133,
+        141
+      ],
+      "meanBlendWeight": 0.4414
+    },
+    "samples": [
+      {
+        "frame": 0,
+        "keyframes": [
+          0,
+          8
+        ],
+        "mix": 0.0,
+        "mae": 0.7552,
+        "psnr": 44.612,
+        "sharpness": 7.7074
+      },
+      {
+        "frame": 10,
+        "keyframes": [
+          8,
+          16
+        ],
+        "mix": 0.25,
+        "mae": 2.819,
+        "psnr": 32.51,
+        "sharpness": 6.5985
+      },
+      {
+        "frame": 21,
+        "keyframes": [
+          16,
+          24
+        ],
+        "mix": 0.625,
+        "mae": 2.6181,
+        "psnr": 33.563,
+        "sharpness": 6.6781
+      },
+      {
+        "frame": 31,
+        "keyframes": [
+          24,
+          32
+        ],
+        "mix": 0.875,
+        "mae": 2.4696,
+        "psnr": 34.175,
+        "sharpness": 7.0288
+      },
+      {
+        "frame": 41,
+        "keyframes": [
+          40,
+          48
+        ],
+        "mix": 0.125,
+        "mae": 2.5553,
+        "psnr": 34.017,
+        "sharpness": 6.789
+      },
+      {
+        "frame": 51,
+        "keyframes": [
+          48,
+          56
+        ],
+        "mix": 0.375,
+        "mae": 2.8225,
+        "psnr": 32.991,
+        "sharpness": 6.6206
+      },
+      {
+        "frame": 62,
+        "keyframes": [
+          56,
+          64
+        ],
+        "mix": 0.75,
+        "mae": 2.8114,
+        "psnr": 33.002,
+        "sharpness": 6.578
+      },
+      {
+        "frame": 72,
+        "keyframes": [
+          72,
+          80
+        ],
+        "mix": 0.0,
+        "mae": 1.4572,
+        "psnr": 38.34,
+        "sharpness": 7.8731
+      },
+      {
+        "frame": 82,
+        "keyframes": [
+          80,
+          88
+        ],
+        "mix": 0.25,
+        "mae": 2.8976,
+        "psnr": 32.629,
+        "sharpness": 6.7018
+      },
+      {
+        "frame": 93,
+        "keyframes": [
+          88,
+          96
+        ],
+        "mix": 0.625,
+        "mae": 2.8001,
+        "psnr": 33.105,
+        "sharpness": 6.6525
+      },
+      {
+        "frame": 103,
+        "keyframes": [
+          96,
+          104
+        ],
+        "mix": 0.875,
+        "mae": 2.3688,
+        "psnr": 34.81,
+        "sharpness": 7.0738
+      },
+      {
+        "frame": 113,
+        "keyframes": [
+          112,
+          120
+        ],
+        "mix": 0.125,
+        "mae": 2.5098,
+        "psnr": 34.294,
+        "sharpness": 6.8149
+      },
+      {
+        "frame": 123,
+        "keyframes": [
+          120,
+          128
+        ],
+        "mix": 0.375,
+        "mae": 3.0479,
+        "psnr": 31.997,
+        "sharpness": 6.6243
+      },
+      {
+        "frame": 134,
+        "keyframes": [
+          128,
+          136
+        ],
+        "mix": 0.75,
+        "mae": 2.7723,
+        "psnr": 33.298,
+        "sharpness": 6.7148
+      },
+      {
+        "frame": 144,
+        "keyframes": [
+          136,
+          144
+        ],
+        "mix": 1.0,
+        "mae": 1.3954,
+        "psnr": 39.619,
+        "sharpness": 7.8211
+      }
+    ]
+  },
+  {
+    "candidate": {
+      "name": "step8-q98-flow368-linear-lossy92",
+      "step": 8,
+      "quality": 98,
+      "flowCell": [
+        368,
+        158
+      ],
+      "flowScale": 0.5,
+      "smoothFlow": false,
+      "blendMode": "linear",
+      "flowLossy": true,
+      "flowQuality": 92
+    },
+    "keyframeCount": 19,
+    "keyAtlasBytes": 5132404,
+    "flowAtlasBytes": 359558,
+    "flowCells": 271,
+    "timelineGzipBytes": 355829,
+    "packageBytes": 6873591,
+    "flowSaturatedChannelRatio": 2e-06,
+    "flowAtlas": [
+      4784,
+      3318
+    ],
+    "meanMae": 2.3645,
+    "meanPsnr": 35.518,
+    "meanSharpness": 6.9671,
+    "temporal": {
+      "meanDeltaMae": 1.1348,
+      "meanOutputDelta": 1.5855,
+      "meanReferenceDelta": 1.597,
+      "switchMeanDelta": 1.5065,
+      "switchSpikeRatio": 0.9614,
+      "maxDelta": 2.8057,
+      "switchFrames": [
+        5,
+        13,
+        21,
+        29,
+        37,
+        45,
+        53,
+        61,
+        69,
+        77,
+        85,
+        93,
+        101,
+        109,
+        117,
+        125,
+        133,
+        141
+      ],
+      "meanBlendWeight": 0.4414
+    },
+    "samples": [
+      {
+        "frame": 0,
+        "keyframes": [
+          0,
+          8
+        ],
+        "mix": 0.0,
+        "mae": 0.7556,
+        "psnr": 44.544,
+        "sharpness": 7.7074
+      },
+      {
+        "frame": 10,
+        "keyframes": [
+          8,
+          16
+        ],
+        "mix": 0.25,
+        "mae": 2.7805,
+        "psnr": 32.691,
+        "sharpness": 6.614
+      },
+      {
+        "frame": 21,
+        "keyframes": [
+          16,
+          24
+        ],
+        "mix": 0.625,
+        "mae": 2.5738,
+        "psnr": 33.747,
+        "sharpness": 6.7001
+      },
+      {
+        "frame": 31,
+        "keyframes": [
+          24,
+          32
+        ],
+        "mix": 0.875,
+        "mae": 2.443,
+        "psnr": 34.308,
+        "sharpness": 7.0326
+      },
+      {
+        "frame": 41,
+        "keyframes": [
+          40,
+          48
+        ],
+        "mix": 0.125,
+        "mae": 2.4908,
+        "psnr": 34.426,
+        "sharpness": 6.8041
+      },
+      {
+        "frame": 51,
+        "keyframes": [
+          48,
+          56
+        ],
+        "mix": 0.375,
+        "mae": 2.7937,
+        "psnr": 33.08,
+        "sharpness": 6.6221
+      },
+      {
+        "frame": 62,
+        "keyframes": [
+          56,
+          64
+        ],
+        "mix": 0.75,
+        "mae": 2.8051,
+        "psnr": 33.032,
+        "sharpness": 6.597
+      },
+      {
+        "frame": 72,
+        "keyframes": [
+          72,
+          80
+        ],
+        "mix": 0.0,
+        "mae": 1.3041,
+        "psnr": 42.834,
+        "sharpness": 7.9135
+      },
+      {
+        "frame": 82,
+        "keyframes": [
+          80,
+          88
+        ],
+        "mix": 0.25,
+        "mae": 2.8487,
+        "psnr": 32.816,
+        "sharpness": 6.7199
+      },
+      {
+        "frame": 93,
+        "keyframes": [
+          88,
+          96
+        ],
+        "mix": 0.625,
+        "mae": 2.8024,
+        "psnr": 33.034,
+        "sharpness": 6.674
+      },
+      {
+        "frame": 103,
+        "keyframes": [
+          96,
+          104
+        ],
+        "mix": 0.875,
+        "mae": 2.3259,
+        "psnr": 35.179,
+        "sharpness": 7.085
+      },
+      {
+        "frame": 113,
+        "keyframes": [
+          112,
+          120
+        ],
+        "mix": 0.125,
+        "mae": 2.4956,
+        "psnr": 34.39,
+        "sharpness": 6.8101
+      },
+      {
+        "frame": 123,
+        "keyframes": [
+          120,
+          128
+        ],
+        "mix": 0.375,
+        "mae": 3.0482,
+        "psnr": 31.97,
+        "sharpness": 6.6423
+      },
+      {
+        "frame": 134,
+        "keyframes": [
+          128,
+          136
+        ],
+        "mix": 0.75,
+        "mae": 2.7459,
+        "psnr": 33.437,
+        "sharpness": 6.7227
+      },
+      {
+        "frame": 144,
+        "keyframes": [
+          136,
+          144
+        ],
+        "mix": 1.0,
+        "mae": 1.2543,
+        "psnr": 43.279,
+        "sharpness": 7.862
+      }
+    ]
+  },
+  {
+    "candidate": {
+      "name": "step8-q97-flow368-linear-lossy96",
+      "step": 8,
+      "quality": 97,
+      "flowCell": [
+        368,
+        158
+      ],
+      "flowScale": 0.5,
+      "smoothFlow": false,
+      "blendMode": "linear",
+      "flowLossy": true,
+      "flowQuality": 96
+    },
+    "keyframeCount": 19,
+    "keyAtlasBytes": 4480114,
+    "flowAtlasBytes": 545968,
+    "flowCells": 271,
+    "timelineGzipBytes": 355829,
+    "packageBytes": 6407711,
+    "flowSaturatedChannelRatio": 2e-06,
+    "flowAtlas": [
+      4784,
+      3318
+    ],
+    "meanMae": 2.3657,
+    "meanPsnr": 35.544,
+    "meanSharpness": 6.919,
+    "temporal": {
+      "meanDeltaMae": 1.1306,
+      "meanOutputDelta": 1.5871,
+      "meanReferenceDelta": 1.597,
+      "switchMeanDelta": 1.5016,
+      "switchSpikeRatio": 0.9569,
+      "maxDelta": 2.8489,
+      "switchFrames": [
+        5,
+        13,
+        21,
+        29,
+        37,
+        45,
+        53,
+        61,
+        69,
+        77,
+        85,
+        93,
+        101,
+        109,
+        117,
+        125,
+        133,
+        141
+      ],
+      "meanBlendWeight": 0.4414
+    },
+    "samples": [
+      {
+        "frame": 0,
+        "keyframes": [
+          0,
+          8
+        ],
+        "mix": 0.0,
+        "mae": 0.7727,
+        "psnr": 44.559,
+        "sharpness": 7.6727
+      },
+      {
+        "frame": 10,
+        "keyframes": [
+          8,
+          16
+        ],
+        "mix": 0.25,
+        "mae": 2.7676,
+        "psnr": 32.715,
+        "sharpness": 6.5726
+      },
+      {
+        "frame": 21,
+        "keyframes": [
+          16,
+          24
+        ],
+        "mix": 0.625,
+        "mae": 2.5676,
+        "psnr": 33.829,
+        "sharpness": 6.6544
+      },
+      {
+        "frame": 31,
+        "keyframes": [
+          24,
+          32
+        ],
+        "mix": 0.875,
+        "mae": 2.4531,
+        "psnr": 34.31,
+        "sharpness": 7.0021
+      },
+      {
+        "frame": 41,
+        "keyframes": [
+          40,
+          48
+        ],
+        "mix": 0.125,
+        "mae": 2.5073,
+        "psnr": 34.384,
+        "sharpness": 6.7435
+      },
+      {
+        "frame": 51,
+        "keyframes": [
+          48,
+          56
+        ],
+        "mix": 0.375,
+        "mae": 2.7737,
+        "psnr": 33.234,
+        "sharpness": 6.5884
+      },
+      {
+        "frame": 62,
+        "keyframes": [
+          56,
+          64
+        ],
+        "mix": 0.75,
+        "mae": 2.7983,
+        "psnr": 33.042,
+        "sharpness": 6.5722
+      },
+      {
+        "frame": 72,
+        "keyframes": [
+          72,
+          80
+        ],
+        "mix": 0.0,
+        "mae": 1.3379,
+        "psnr": 42.728,
+        "sharpness": 7.8389
+      },
+      {
+        "frame": 82,
+        "keyframes": [
+          80,
+          88
+        ],
+        "mix": 0.25,
+        "mae": 2.8507,
+        "psnr": 32.771,
+        "sharpness": 6.6643
+      },
+      {
+        "frame": 93,
+        "keyframes": [
+          88,
+          96
+        ],
+        "mix": 0.625,
+        "mae": 2.7674,
+        "psnr": 33.294,
+        "sharpness": 6.6253
+      },
+      {
+        "frame": 103,
+        "keyframes": [
+          96,
+          104
+        ],
+        "mix": 0.875,
+        "mae": 2.3444,
+        "psnr": 35.102,
+        "sharpness": 7.0352
+      },
+      {
+        "frame": 113,
+        "keyframes": [
+          112,
+          120
+        ],
+        "mix": 0.125,
+        "mae": 2.4971,
+        "psnr": 34.405,
+        "sharpness": 6.7709
+      },
+      {
+        "frame": 123,
+        "keyframes": [
+          120,
+          128
+        ],
+        "mix": 0.375,
+        "mae": 3.0165,
+        "psnr": 32.151,
+        "sharpness": 6.6018
+      },
+      {
+        "frame": 134,
+        "keyframes": [
+          128,
+          136
+        ],
+        "mix": 0.75,
+        "mae": 2.7383,
+        "psnr": 33.536,
+        "sharpness": 6.6645
+      },
+      {
+        "frame": 144,
+        "keyframes": [
+          136,
+          144
+        ],
+        "mix": 1.0,
+        "mae": 1.2923,
+        "psnr": 43.1,
+        "sharpness": 7.7789
+      }
+    ]
+  },
+  {
+    "candidate": {
+      "name": "step8-q96-flow368-linear-lossy96",
+      "step": 8,
+      "quality": 96,
+      "flowCell": [
+        368,
+        158
+      ],
+      "flowScale": 0.5,
+      "smoothFlow": false,
+      "blendMode": "linear",
+      "flowLossy": true,
+      "flowQuality": 96
+    },
+    "keyframeCount": 19,
+    "keyAtlasBytes": 4261000,
+    "flowAtlasBytes": 545968,
+    "flowCells": 271,
+    "timelineGzipBytes": 355829,
+    "packageBytes": 6188597,
+    "flowSaturatedChannelRatio": 2e-06,
+    "flowAtlas": [
+      4784,
+      3318
+    ],
+    "meanMae": 2.3796,
+    "meanPsnr": 35.489,
+    "meanSharpness": 6.9298,
+    "temporal": {
+      "meanDeltaMae": 1.1312,
+      "meanOutputDelta": 1.5881,
+      "meanReferenceDelta": 1.597,
+      "switchMeanDelta": 1.5023,
+      "switchSpikeRatio": 0.9567,
+      "maxDelta": 2.8495,
+      "switchFrames": [
+        5,
+        13,
+        21,
+        29,
+        37,
+        45,
+        53,
+        61,
+        69,
+        77,
+        85,
+        93,
+        101,
+        109,
+        117,
+        125,
+        133,
+        141
+      ],
+      "meanBlendWeight": 0.4414
+    },
+    "samples": [
+      {
+        "frame": 0,
+        "keyframes": [
+          0,
+          8
+        ],
+        "mix": 0.0,
+        "mae": 0.8013,
+        "psnr": 44.313,
+        "sharpness": 7.6786
+      },
+      {
+        "frame": 10,
+        "keyframes": [
+          8,
+          16
+        ],
+        "mix": 0.25,
+        "mae": 2.7761,
+        "psnr": 32.706,
+        "sharpness": 6.5794
+      },
+      {
+        "frame": 21,
+        "keyframes": [
+          16,
+          24
+        ],
+        "mix": 0.625,
+        "mae": 2.576,
+        "psnr": 33.817,
+        "sharpness": 6.6627
+      },
+      {
+        "frame": 31,
+        "keyframes": [
+          24,
+          32
+        ],
+        "mix": 0.875,
+        "mae": 2.4637,
+        "psnr": 34.293,
+        "sharpness": 7.0103
+      },
+      {
+        "frame": 41,
+        "keyframes": [
+          40,
+          48
+        ],
+        "mix": 0.125,
+        "mae": 2.5179,
+        "psnr": 34.366,
+        "sharpness": 6.7547
+      },
+      {
+        "frame": 51,
+        "keyframes": [
+          48,
+          56
+        ],
+        "mix": 0.375,
+        "mae": 2.782,
+        "psnr": 33.224,
+        "sharpness": 6.5972
+      },
+      {
+        "frame": 62,
+        "keyframes": [
+          56,
+          64
+        ],
+        "mix": 0.75,
+        "mae": 2.8056,
+        "psnr": 33.03,
+        "sharpness": 6.5825
+      },
+      {
+        "frame": 72,
+        "keyframes": [
+          72,
+          80
+        ],
+        "mix": 0.0,
+        "mae": 1.3745,
+        "psnr": 42.519,
+        "sharpness": 7.8566
+      },
+      {
+        "frame": 82,
+        "keyframes": [
+          80,
+          88
+        ],
+        "mix": 0.25,
+        "mae": 2.8592,
+        "psnr": 32.76,
+        "sharpness": 6.6719
+      },
+      {
+        "frame": 93,
+        "keyframes": [
+          88,
+          96
+        ],
+        "mix": 0.625,
+        "mae": 2.7738,
+        "psnr": 33.285,
+        "sharpness": 6.636
+      },
+      {
+        "frame": 103,
+        "keyframes": [
+          96,
+          104
+        ],
+        "mix": 0.875,
+        "mae": 2.3571,
+        "psnr": 35.082,
+        "sharpness": 7.0458
+      },
+      {
+        "frame": 113,
+        "keyframes": [
+          112,
+          120
+        ],
+        "mix": 0.125,
+        "mae": 2.5085,
+        "psnr": 34.386,
+        "sharpness": 6.7832
+      },
+      {
+        "frame": 123,
+        "keyframes": [
+          120,
+          128
+        ],
+        "mix": 0.375,
+        "mae": 3.024,
+        "psnr": 32.143,
+        "sharpness": 6.6112
+      },
+      {
+        "frame": 134,
+        "keyframes": [
+          128,
+          136
+        ],
+        "mix": 0.75,
+        "mae": 2.7464,
+        "psnr": 33.522,
+        "sharpness": 6.6755
+      },
+      {
+        "frame": 144,
+        "keyframes": [
+          136,
+          144
+        ],
+        "mix": 1.0,
+        "mae": 1.3276,
+        "psnr": 42.89,
+        "sharpness": 7.8018
+      }
+    ]
+  }
+]

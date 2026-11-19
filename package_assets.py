@@ -53,6 +53,8 @@ def main() -> None:
         "fps": timeline["fps"],
         "commands": len(timeline["commands"]),
         "keyframes": len(reference_frames["keyframes"]),
+        "flowCells": reference_frames["flowCells"],
+        "blendMode": reference_frames["blendMode"],
         "fullResolution": reference_frames["fullResolution"],
         "files": [],
     }

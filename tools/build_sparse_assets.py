@@ -1,8 +1,11 @@
-"""Build a compact, full-resolution sparse-frame reconstruction dataset.
+"""Build a compact, full-resolution blended-keyframe reconstruction dataset.
 
 The source video is read only here. Runtime assets contain full-resolution
-WebP keyframes, compact optical-flow maps, a locked base, a motion mask and
-the existing drawing-command timeline. No MP4 or video decoder is shipped.
+WebP keyframes, two-way optical-flow maps, a locked base, a motion mask and
+the existing drawing-command timeline. Each intermediate frame blends a warp
+from its previous keyframe with a warp from its next keyframe, so the
+reference frame changes continuously at keyframe boundaries. No MP4 or video
+decoder is shipped.
 """
 
 from __future__ import annotations
@@ -23,6 +26,7 @@ FLOW_CELL = (368, 158)
 FLOW_COLS = 13
 KEY_COLS = 4
 FLOW_SCALE = 0.5
+FLOW_OFFSET = 128
 KEYFRAME_STEP = 8
 
 
@@ -56,16 +60,19 @@ def read_video(video: Path, width: int, height: int):
     return np.stack(full_frames), np.stack(small_frames)
 
 
-def keyframes(count: int, step: int):
+def uniform_keys(count: int, step: int):
     keys = list(range(0, count, step))
     if keys[-1] != count - 1:
         keys.append(count - 1)
     return np.array(keys, dtype=int)
 
 
-def nearest_anchor_indices(keys: np.ndarray, count: int):
-    distance = np.abs(keys[None, :] - np.arange(count)[:, None])
-    return distance.argmin(1).astype(int)
+def brackets(keys: np.ndarray, frame: int):
+    lo = int(np.clip(np.searchsorted(keys, frame, side="right") - 1,
+                     0, len(keys) - 2))
+    hi = lo + 1
+    t = float(np.clip((frame - keys[lo]) / (keys[hi] - keys[lo]), 0, 1))
+    return lo, hi, t
 
 
 def make_key_atlas(frames: np.ndarray, keys: np.ndarray, width: int,
@@ -78,33 +85,80 @@ def make_key_atlas(frames: np.ndarray, keys: np.ndarray, width: int,
     return sheet, rows
 
 
+def quantized_flow(current: np.ndarray, target: np.ndarray,
+                   width: int, height: int):
+    a = cv2.cvtColor(current, cv2.COLOR_RGB2GRAY)
+    b = cv2.cvtColor(target, cv2.COLOR_RGB2GRAY)
+    # Encode full-canvas pixel displacement. The shader adds this directly
+    # to uv * u_resolution before sampling the full-resolution keyframe.
+    flow = cv2.calcOpticalFlowFarneback(a, b, None,
+                                       0.5, 3, 15, 3, 5, 1.2, 0)
+    flow[..., 0] *= width / current.shape[1]
+    flow[..., 1] *= height / current.shape[0]
+    qx = np.clip(np.rint(flow[..., 0] / FLOW_SCALE + FLOW_OFFSET), 0, 255)
+    qy = np.clip(np.rint(flow[..., 1] / FLOW_SCALE + FLOW_OFFSET), 0, 255)
+    return np.dstack([qx, qy, np.full(qx.shape, FLOW_OFFSET)]).astype(np.uint8)
+
+
 def make_flow_atlas(frames: np.ndarray, keys: np.ndarray,
-                    anchors: np.ndarray, width: int, height: int):
-    grays = [cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY) for frame in frames]
+                    width: int, height: int):
     cell_w, cell_h = FLOW_CELL
-    rows = math.ceil(len(frames) / FLOW_COLS)
-    sheet = np.full((rows * cell_h, FLOW_COLS * cell_w, 3), 128, np.uint8)
-    scale_x = width / cell_w
-    scale_y = height / cell_h
-    for frame_index in range(len(frames)):
-        anchor_slot = int(anchors[frame_index])
-        anchor_frame = int(keys[anchor_slot])
-        if anchor_frame == frame_index:
-            flow = np.zeros((cell_h, cell_w, 2), np.float32)
+    cells = []
+    flow_cell0 = []
+    flow_cell1 = []
+    blend_weight = []
+    saturated = 0
+    total = 0
+
+    def add_cell(frame: int, key_slot: int):
+        nonlocal saturated, total
+        key_frame = int(keys[key_slot])
+        if key_frame == frame:
+            cell = np.full((cell_h, cell_w, 3), FLOW_OFFSET, np.uint8)
         else:
-            flow = cv2.calcOpticalFlowFarneback(
-                grays[frame_index], grays[anchor_frame], None,
-                0.5, 3, 15, 3, 5, 1.2, 0)
-            flow[..., 0] *= scale_x
-            flow[..., 1] *= scale_y
-        qx = np.clip(np.rint(flow[..., 0] / FLOW_SCALE + 128), 0, 255)
-        qy = np.clip(np.rint(flow[..., 1] / FLOW_SCALE + 128), 0, 255)
-        cell = np.dstack([qx.astype(np.uint8), qy.astype(np.uint8),
-                          np.full(qx.shape, 128, np.uint8)])
-        x = (frame_index % FLOW_COLS) * cell_w
-        y = (frame_index // FLOW_COLS) * cell_h
+            cell = quantized_flow(frames[frame], frames[key_frame],
+                                  width, height)
+            before = np.dstack([cell[..., 0], cell[..., 1]])
+            saturated += int(np.count_nonzero(
+                (before <= 0) | (before >= 255)))
+        total += cell_w * cell_h * 2
+        cells.append(cell)
+        return len(cells) - 1
+
+    for frame in range(len(frames)):
+        lo, hi, mix = brackets(keys, frame)
+        blend_weight.append(round(mix, 5))
+        if mix <= 1e-6:
+            only = add_cell(frame, lo)
+            flow_cell0.append(only)
+            flow_cell1.append(only)
+        elif mix >= 1 - 1e-6:
+            only = add_cell(frame, hi)
+            flow_cell0.append(only)
+            flow_cell1.append(only)
+        else:
+            first = add_cell(frame, lo)
+            second = add_cell(frame, hi)
+            flow_cell0.append(first)
+            flow_cell1.append(second)
+
+    rows = math.ceil(len(cells) / FLOW_COLS)
+    sheet = np.full((rows * cell_h, FLOW_COLS * cell_w, 3), 128, np.uint8)
+    for index, cell in enumerate(cells):
+        x = (index % FLOW_COLS) * cell_w
+        y = (index // FLOW_COLS) * cell_h
         sheet[y:y + cell_h, x:x + cell_w] = cell
-    return sheet, rows, cell_w, cell_h
+    info = {
+        "rows": rows,
+        "cells": len(cells),
+        "cellWidth": cell_w,
+        "cellHeight": cell_h,
+        "flowCell0": flow_cell0,
+        "flowCell1": flow_cell1,
+        "blendWeight": blend_weight,
+        "saturatedChannelRatio": round(saturated / total, 6),
+    }
+    return sheet, info
 
 
 def main():
@@ -112,7 +166,8 @@ def main():
     ap.add_argument("--video", type=Path, required=True)
     ap.add_argument("--out", type=Path, default=SOURCE_ASSETS)
     ap.add_argument("--step", type=int, default=KEYFRAME_STEP)
-    ap.add_argument("--quality", type=int, default=98)
+    ap.add_argument("--quality", type=int, default=95)
+    ap.add_argument("--flow-quality", type=int, default=92)
     args = ap.parse_args()
 
     meta = json.loads((SOURCE_ASSETS / "timeline.json").read_text(encoding="utf-8"))
@@ -121,35 +176,41 @@ def main():
     if len(frames) != meta["frameCount"]:
         raise ValueError("Video frame count does not match timeline")
 
-    keys = keyframes(len(frames), args.step)
-    anchors = nearest_anchor_indices(keys, len(frames))
+    keys = uniform_keys(len(frames), args.step)
     key_sheet, key_rows = make_key_atlas(frames, keys, width, height)
-    flow_sheet, flow_rows, flow_w, flow_h = make_flow_atlas(
-        small, keys, anchors, width, height)
+    flow_sheet, flow_info = make_flow_atlas(small, keys, width, height)
 
     save_webp(key_sheet, args.out / "keyframes.webp",
               quality=args.quality, method=4)
-    save_webp(flow_sheet, args.out / "flow.webp", lossless=True, method=6)
+    save_webp(flow_sheet, args.out / "flow.webp",
+              quality=args.flow_quality, method=6)
 
     meta["referenceFrames"] = {
         "sync": "timeline.frameAtTime",
         "frames": len(frames),
-        "source": "pre-analyzed sparse WebP keyframes and optical flow",
-        "strategy": "full-resolution sparse keyframes + quantized optical flow",
+        "source": "pre-analyzed WebP keyframes and bidirectional optical flow",
+        "strategy": "full-resolution keyframes + blended bidirectional optical flow",
         "keyframeFile": "keyframes.webp",
         "flowFile": "flow.webp",
         "keyframes": keys.tolist(),
-        "anchorKeyframe": anchors.tolist(),
+        "flowCell0": flow_info["flowCell0"],
+        "flowCell1": flow_info["flowCell1"],
+        "blendWeight": flow_info["blendWeight"],
+        "flowCells": flow_info["cells"],
+        "blendMode": "linear",
+        "flowEncoding": f"lossy WebP q{args.flow_quality}",
+        "keyframeEncoding": f"lossy WebP q{args.quality}",
         "keyframeCols": KEY_COLS,
         "keyframeRows": key_rows,
         "keyframeWidth": width,
         "keyframeHeight": height,
         "flowCols": FLOW_COLS,
-        "flowRows": flow_rows,
-        "flowCellWidth": flow_w,
-        "flowCellHeight": flow_h,
+        "flowRows": flow_info["rows"],
+        "flowCellWidth": flow_info["cellWidth"],
+        "flowCellHeight": flow_info["cellHeight"],
         "flowScale": FLOW_SCALE,
         "flowOffset": 128,
+        "flowSaturatedChannelRatio": flow_info["saturatedChannelRatio"],
         "fullResolution": True,
     }
     meta.pop("sheet", None)
@@ -158,8 +219,11 @@ def main():
     print(json.dumps({
         "frames": len(frames),
         "keyframes": len(keys),
+        "flowCells": flow_info["cells"],
         "keyAtlas": [key_sheet.shape[1], key_sheet.shape[0]],
         "flowAtlas": [flow_sheet.shape[1], flow_sheet.shape[0]],
+        "keyframeQuality": args.quality,
+        "flowQuality": args.flow_quality,
         "assetBytes": sum((args.out / name).stat().st_size for name in
                           ["base.webp", "motion-mask.webp",
                            "keyframes.webp", "flow.webp", "timeline.json"]),

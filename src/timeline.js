@@ -54,14 +54,32 @@ export function transformPoints(points, state) {
 
 export function sparseFrameInfo(meta, frame) {
   const rf = meta.referenceFrames;
-  const anchor = rf.anchorKeyframe[frame];
-  const anchorFrame = rf.keyframes[anchor];
+  const keys = rf.keyframes;
+  let key0 = keys.length - 2;
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (frame >= keys[i] && frame <= keys[i + 1]) {
+      key0 = i;
+      break;
+    }
+  }
+  const key1 = key0 + 1;
+  const span = keys[key1] - keys[key0];
+  const mix = clamp((frame - keys[key0]) / span, 0, 1);
+  const cellIndex0 = rf.flowCell0[frame];
+  const cellIndex1 = rf.flowCell1[frame];
   return {
-    anchor,
-    anchorFrame,
-    anchorDistance: Math.abs(frame - anchorFrame),
-    keyCell: [anchor % rf.keyframeCols, Math.floor(anchor / rf.keyframeCols)],
-    flowCell: [frame % rf.flowCols, Math.floor(frame / rf.flowCols)],
+    key0,
+    key1,
+    keyFrame0: keys[key0],
+    keyFrame1: keys[key1],
+    anchorDistance: Math.min(frame - keys[key0], keys[key1] - frame),
+    mix: rf.blendWeight[frame],
+    keyCell0: [key0 % rf.keyframeCols, Math.floor(key0 / rf.keyframeCols)],
+    keyCell1: [key1 % rf.keyframeCols, Math.floor(key1 / rf.keyframeCols)],
+    flowCell0: [cellIndex0 % rf.flowCols,
+                Math.floor(cellIndex0 / rf.flowCols)],
+    flowCell1: [cellIndex1 % rf.flowCols,
+                Math.floor(cellIndex1 / rf.flowCols)],
   };
 }
 

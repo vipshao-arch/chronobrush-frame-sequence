@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ChronoBrush · 参考帧同步笔触重建</title>
-    <script type="module" crossorigin src="./assets/index-B_F6rnUj.js"></script>
+    <script type="module" crossorigin src="./assets/index-BJDZTZ7c.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-4KTTv1Gw.css">
   </head>
   <body>
@@ -19,7 +19,7 @@
           <div class="stage" id="stage">
             <canvas id="gl" aria-label="WebGL 静态基底与全分辨率参考帧合成"></canvas>
             <canvas id="vector" aria-label="时序绘图指令层"></canvas>
-            <canvas id="reference" aria-label="全分辨率关键帧与光流参考画面"></canvas>
+            <canvas id="reference" aria-label="全分辨率双关键帧补帧参考画面"></canvas>
             <div class="stage-label"><span id="stageCaption">重建画面</span><b id="frameLabel">—</b></div>
           </div>
           <div class="transport">
@@ -35,7 +35,7 @@
             <div><span>当前帧</span><b id="frameValue">0 / 144</b></div>
             <div><span>MAE 核心 / 叠加</span><b id="mae">—</b></div>
             <div><span>静态锁定区域</span><b id="locked">—</b></div>
-            <div><span>锚点距离 / 同步偏移</span><b id="sync">—</b></div>
+            <div><span>补帧区间 / 混合权重</span><b id="sync">—</b></div>
             <div><span>平均笔触位移</span><b id="displacement">—</b></div>
             <div><span>平均形变量</span><b id="deformation">—</b></div>
           </div>
@@ -46,7 +46,7 @@
             <div><span class="eyebrow">FRAME ANALYSIS</span><h1>时序笔触控制台</h1></div>
             <div class="pulse"></div>
           </div>
-          <p class="intro">视频时间驱动稀疏关键帧、光流与笔触状态；每帧光流把最近的全分辨率关键帧形变到当前时刻，静态像素留在锁定的 WebGL 基底。</p>
+          <p class="intro">视频时间驱动关键帧、双向光流与笔触状态；中间帧由前后两张全分辨率关键帧连续补帧，锚点处不再切换画面，静态像素留在锁定的 WebGL 基底。</p>
 
           <div class="card">
             <div class="card-head"><h2>位移 / 形变</h2><span id="motionTime">t = 0.000s</span></div>
@@ -63,11 +63,11 @@
           <div class="card details">
             <h2>运行路径</h2>
             <ol>
-              <li><b>预分析</b><span>逐帧统计、运动掩膜、轮廓提取、稀疏关键帧与 Farnebäck 光流</span></li>
+              <li><b>预分析</b><span>逐帧统计、运动掩膜、轮廓提取、稀疏关键帧与双向 Farnebäck 光流</span></li>
               <li><b>绘图函数</b><span>ellipse / line / bezier / brush，按状态插值</span></li>
-              <li><b>同步</b><span>时间轴 → 帧号 → 全分辨率关键帧 + 光流 + 笔触状态</span></li>
+              <li><b>同步</b><span>时间轴 → 帧号 → 前后关键帧双 warp + 连续混合权重 + 笔触状态</span></li>
               <li><b>锁定</b><span>静态 WebGL 基底每帧不更新，仅在着色器中混合</span></li>
-              <li><b>离线实测</b><span>19 张 1470×630 关键帧；MAE 2.21，PSNR 36.16 dB</span></li>
+              <li><b>离线实测</b><span>19 张 1470×630 关键帧；MAE 2.41，PSNR 35.36 dB；最大帧间跳变 2.81</span></li>
             </ol>
           </div>
         </aside>

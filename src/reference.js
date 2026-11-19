@@ -17,28 +17,36 @@ uniform sampler2D u_flow;
 uniform sampler2D u_mask;
 uniform sampler2D u_base;
 uniform vec2 u_resolution;
-uniform vec2 u_keyCell;
-uniform vec2 u_flowCell;
+uniform vec2 u_keyCell0;
+uniform vec2 u_keyCell1;
+uniform vec2 u_flowCell0;
+uniform vec2 u_flowCell1;
 uniform vec2 u_flowCellSize;
 uniform vec2 u_keyAtlasSize;
 uniform vec2 u_flowAtlasSize;
 uniform vec2 u_flowDecode;
+uniform float u_mix;
 uniform float u_fullReference;
 
-void main() {
-  vec2 uv = vec2(v_uv.x, 1.0 - v_uv.y);
-  vec3 lockedBase = texture2D(u_base, uv).rgb;
-
-  vec2 flowPixel = u_flowCell * u_flowCellSize +
+vec3 warpedKey(vec2 keyCell, vec2 flowCell, vec2 uv) {
+  vec2 flowPixel = flowCell * u_flowCellSize +
     clamp(uv * u_flowCellSize, vec2(0.5), u_flowCellSize - 0.5);
   vec2 packedFlow = texture2D(u_flow, flowPixel / u_flowAtlasSize).rg;
   vec2 displacement =
     (packedFlow * 255.0 - u_flowDecode.y) * u_flowDecode.x;
   vec2 warpedPixel = clamp(uv * u_resolution + displacement,
                            vec2(0.5), u_resolution - 0.5);
-  vec2 keyPixel = u_keyCell * u_resolution + warpedPixel;
-  vec3 referenceFrame =
-    texture2D(u_keyframes, keyPixel / u_keyAtlasSize).rgb;
+  vec2 keyPixel = keyCell * u_resolution + warpedPixel;
+  return texture2D(u_keyframes, keyPixel / u_keyAtlasSize).rgb;
+}
+
+void main() {
+  vec2 uv = vec2(v_uv.x, 1.0 - v_uv.y);
+  vec3 lockedBase = texture2D(u_base, uv).rgb;
+
+  vec3 reference0 = warpedKey(u_keyCell0, u_flowCell0, uv);
+  vec3 reference1 = warpedKey(u_keyCell1, u_flowCell1, uv);
+  vec3 referenceFrame = mix(reference0, reference1, u_mix);
 
   float motion = texture2D(u_mask, uv).r;
   float replacement = smoothstep(0.055, 0.145, motion);
@@ -133,8 +141,15 @@ export class ReferenceRenderer {
                  flowAtlasWidth, flowAtlasHeight);
     gl.uniform2f(gl.getUniformLocation(this.program, "u_flowDecode"),
                  rf.flowScale, rf.flowOffset);
-    this.keyCellLocation = gl.getUniformLocation(this.program, "u_keyCell");
-    this.flowCellLocation = gl.getUniformLocation(this.program, "u_flowCell");
+    this.keyCell0Location =
+      gl.getUniformLocation(this.program, "u_keyCell0");
+    this.keyCell1Location =
+      gl.getUniformLocation(this.program, "u_keyCell1");
+    this.flowCell0Location =
+      gl.getUniformLocation(this.program, "u_flowCell0");
+    this.flowCell1Location =
+      gl.getUniformLocation(this.program, "u_flowCell1");
+    this.mixLocation = gl.getUniformLocation(this.program, "u_mix");
     this.fullReferenceLocation =
       gl.getUniformLocation(this.program, "u_fullReference");
     gl.viewport(0, 0, meta.width, meta.height);
@@ -144,9 +159,15 @@ export class ReferenceRenderer {
     const safeFrame = Math.max(0,
       Math.min(this.meta.frameCount - 1, Math.round(frame)));
     const info = sparseFrameInfo(this.meta, safeFrame);
-    this.gl.uniform2f(this.keyCellLocation, info.keyCell[0], info.keyCell[1]);
-    this.gl.uniform2f(this.flowCellLocation,
-                      info.flowCell[0], info.flowCell[1]);
+    this.gl.uniform2f(this.keyCell0Location,
+                      info.keyCell0[0], info.keyCell0[1]);
+    this.gl.uniform2f(this.keyCell1Location,
+                      info.keyCell1[0], info.keyCell1[1]);
+    this.gl.uniform2f(this.flowCell0Location,
+                      info.flowCell0[0], info.flowCell0[1]);
+    this.gl.uniform2f(this.flowCell1Location,
+                      info.flowCell1[0], info.flowCell1[1]);
+    this.gl.uniform1f(this.mixLocation, info.mix);
     this.gl.uniform1f(this.fullReferenceLocation, fullReference ? 1 : 0);
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
     this.gl.flush();

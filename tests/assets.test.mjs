@@ -21,17 +21,29 @@ test("sparse full-resolution reference data covers every source frame", () => {
   assert.equal(rf.keyframes.length, 19);
   assert.deepEqual(rf.keyframes.slice(0, 3), [0, 8, 16]);
   assert.equal(rf.keyframes.at(-1), 144);
-  assert.equal(rf.anchorKeyframe.length, timeline.frameCount);
-  assert.ok(rf.anchorKeyframe.every((anchor) =>
-    Number.isInteger(anchor) && anchor >= 0 && anchor < rf.keyframes.length));
+  assert.equal(rf.blendMode, "linear");
+  assert.equal(rf.flowCells, 271);
+  assert.equal(rf.flowCell0.length, timeline.frameCount);
+  assert.equal(rf.flowCell1.length, timeline.frameCount);
+  assert.equal(rf.blendWeight.length, timeline.frameCount);
+  assert.ok(rf.flowCell0.every((cell) =>
+    Number.isInteger(cell) && cell >= 0 && cell < rf.flowCells));
+  assert.ok(rf.flowCell1.every((cell) =>
+    Number.isInteger(cell) && cell >= 0 && cell < rf.flowCells));
+  assert.ok(rf.blendWeight.every((weight) => weight >= 0 && weight <= 1));
+  assert.equal(rf.blendWeight[0], 0);
+  assert.equal(rf.blendWeight.at(-1), 1);
   assert.equal(rf.keyframeWidth, timeline.width);
   assert.equal(rf.keyframeHeight, timeline.height);
   assert.ok(rf.keyframeCols * rf.keyframeRows >= rf.keyframes.length);
-  assert.ok(rf.flowCols * rf.flowRows >= timeline.frameCount);
+  assert.equal(rf.flowCols, 13);
+  assert.equal(rf.flowRows, 21);
+  assert.ok(rf.flowCols * rf.flowRows >= rf.flowCells);
   assert.equal(rf.flowCellWidth, 368);
   assert.equal(rf.flowCellHeight, 158);
   assert.equal(rf.flowScale, 0.5);
   assert.equal(rf.flowOffset, 128);
+  assert.equal(rf.anchorKeyframe, undefined);
   assert.equal(timeline.referenceVideo, undefined);
   assert.equal(timeline.sheet, undefined);
 });

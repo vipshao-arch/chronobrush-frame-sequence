@@ -151,7 +151,8 @@ function render(time, forceMeter = false) {
       `${rounded(meta.motionSeries.displacement[transition] || 0, 2)} px`;
     els.deformation.textContent =
       rounded(meta.motionSeries.deformation[transition] || 0, 3);
-    els.sync.textContent = `${info.anchorDistance} f / 0.0 ms`;
+    els.sync.textContent =
+      `${info.keyFrame0}→${info.keyFrame1} / ${rounded(info.mix, 2)}`;
     drawChart(meta, clamped);
     for (const command of meta.commands.slice(0, 12)) {
       const m = command.motion[
@@ -192,7 +193,7 @@ async function init() {
     state.renderer = await loadRenderer(els.gl, meta);
     const rf = meta.referenceFrames;
     els.status.textContent =
-      `${meta.frameCount} 帧 · ${meta.commands.length} 笔触 · ${rf.keyframes.length} 关键帧 · WebGL LOCK=ON`;
+      `${meta.frameCount} 帧 · ${meta.commands.length} 笔触 · ${rf.keyframes.length} 关键帧 · 双向补帧 · WebGL LOCK=ON`;
     els.status.classList.remove("error");
 
     window.__chronobrush = {
@@ -209,11 +210,12 @@ async function init() {
         const info = sparseFrameInfo(meta, Math.max(0, state.lastFrame));
         return {
           frame: state.lastFrame,
-          anchor: info.anchor,
-          anchorFrame: info.anchorFrame,
-          anchorDistance: info.anchorDistance,
+          keyFrame0: info.keyFrame0,
+          keyFrame1: info.keyFrame1,
+          mix: info.mix,
           keyframeCount: rf.keyframes.length,
-          flowFrame: state.lastFrame,
+          flowCells: rf.flowCells,
+          blendMode: rf.blendMode,
           fullResolution: rf.fullResolution,
           baseTextureUpdates: state.renderer.baseTextureUpdates,
           frameSheetTextureUpdates: 0,
@@ -266,7 +268,7 @@ els.vectorToggle.addEventListener("change", () => {
 els.splitToggle.addEventListener("change", () => {
   els.stage.classList.toggle("split", els.splitToggle.checked);
   els.stageCaption.textContent = els.splitToggle.checked
-    ? "左：锁定基底合成 · 右：全分辨率关键帧 + 光流"
+    ? "左：锁定基底合成 · 右：双关键帧连续补帧"
     : "重建画面";
 });
 

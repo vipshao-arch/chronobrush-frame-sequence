@@ -31,25 +31,34 @@ test("state interpolation preserves position and deformation over time", () => {
   assert.ok(Math.abs(middle.alpha - 0.3) < 1e-12);
 });
 
-test("sparse reference frames map to the nearest keyframe and flow cell", () => {
+test("sparse reference frames map to a continuous keyframe bracket", () => {
   const meta = {
     referenceFrames: {
       keyframes: [0, 3, 6, 9, 12],
-      anchorKeyframe: [0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4],
       keyframeCols: 2,
       flowCols: 4,
+      flowCell0: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      flowCell1: [0, 2, 4, 3, 6, 8, 6, 10, 12, 9, 14, 16, 12],
+      blendWeight: [0, 1/3, 2/3, 0, 1/3, 2/3, 0, 1/3, 2/3, 0, 1/3, 2/3, 1],
     },
   };
   const first = sparseFrameInfo(meta, 0);
-  assert.deepEqual([first.anchor, first.anchorFrame, first.anchorDistance],
-                   [0, 0, 0]);
-  assert.deepEqual(first.keyCell, [0, 0]);
-  assert.deepEqual(first.flowCell, [0, 0]);
+  assert.deepEqual([first.keyFrame0, first.keyFrame1, first.mix],
+                   [0, 3, 0]);
+  assert.deepEqual(first.keyCell0, [0, 0]);
+  assert.deepEqual(first.keyCell1, [1, 0]);
+  assert.deepEqual(first.flowCell0, [0, 0]);
+  assert.deepEqual(first.flowCell1, [0, 0]);
   const middle = sparseFrameInfo(meta, 5);
-  assert.deepEqual([middle.anchor, middle.anchorFrame, middle.anchorDistance],
-                   [2, 6, 1]);
-  assert.deepEqual(middle.keyCell, [0, 1]);
-  assert.deepEqual(middle.flowCell, [1, 1]);
+  assert.deepEqual([middle.keyFrame0, middle.keyFrame1, middle.mix],
+                   [3, 6, 2/3]);
+  assert.deepEqual(middle.keyCell0, [1, 0]);
+  assert.deepEqual(middle.keyCell1, [0, 1]);
+  assert.deepEqual(middle.flowCell0, [1, 1]);
+  assert.deepEqual(middle.flowCell1, [0, 2]);
+  const last = sparseFrameInfo(meta, 12);
+  assert.deepEqual([last.keyFrame0, last.keyFrame1, last.mix],
+                   [9, 12, 1]);
 });
 
 test("brush points undergo affine shape and displacement", () => {

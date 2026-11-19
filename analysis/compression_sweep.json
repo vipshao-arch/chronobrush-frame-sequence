@@ -1,0 +1,26 @@
+[
+  {
+    "name": "step8-q98-flow368-linear-lossy94",
+    "step": 8, "quality": 98, "flowCell": [368, 158],
+    "flowScale": 0.5, "smoothFlow": false,
+    "blendMode": "linear", "flowLossy": true, "flowQuality": 94
+  },
+  {
+    "name": "step8-q98-flow368-linear-lossy92",
+    "step": 8, "quality": 98, "flowCell": [368, 158],
+    "flowScale": 0.5, "smoothFlow": false,
+    "blendMode": "linear", "flowLossy": true, "flowQuality": 92
+  },
+  {
+    "name": "step8-q97-flow368-linear-lossy96",
+    "step": 8, "quality": 97, "flowCell": [368, 158],
+    "flowScale": 0.5, "smoothFlow": false,
+    "blendMode": "linear", "flowLossy": true, "flowQuality": 96
+  },
+  {
+    "name": "step8-q96-flow368-linear-lossy96",
+    "step": 8, "quality": 96, "flowCell": [368, 158],
+    "flowScale": 0.5, "smoothFlow": false,
+    "blendMode": "linear", "flowLossy": true, "flowQuality": 96
+  }
+]
