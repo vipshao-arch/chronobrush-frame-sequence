@@ -1,0 +1,31 @@
+{
+  "archive": "chronobrush-runtime-assets.zip",
+  "contents": "assets/{base.webp,reference.webp,motion-mask.webp,timeline.json}",
+  "sourceFrames": 145,
+  "fps": 24.0,
+  "commands": 96,
+  "files": [
+    {
+      "path": "assets/base.webp",
+      "bytes": 579788,
+      "sha256": "82d28e81e59082061443f8694a01f793f0c2a45422a487e14126ea3c2e0d59a4"
+    },
+    {
+      "path": "assets/reference.webp",
+      "bytes": 8442304,
+      "sha256": "e46bda8ce8dcaa447e9a2ab65b043642f4d69dfc3e8544850fddc2425647407a"
+    },
+    {
+      "path": "assets/motion-mask.webp",
+      "bytes": 446012,
+      "sha256": "72f503bb80c76c7002203129a8fdf80ca22ba86d9ca11f18af328814d0b7989b"
+    },
+    {
+      "path": "assets/timeline.json",
+      "bytes": 2092481,
+      "sha256": "4f2220a2149a7f39e6cf02f245148e8aae84e95b26ebb722f9238b457b97b3ef"
+    }
+  ],
+  "archiveBytes": 9824133,
+  "archiveSha256": "5f2d63ca20bc85e5eea57c5e634a628916ef8707f9dfb1021d13f21f90096d66"
+}
